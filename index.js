@@ -49,7 +49,31 @@ async function run() {
 
       const result = await productsCollection.insertOne(newProduct);
       res.send(result);
-      console.log(result);
+    });
+
+    app.patch("/products/:id", async (req, res) => {
+      const productId = req.params.id;
+      const updatedData = req.body;
+
+      const filter = { _id: new ObjectId(productId) };
+
+      const updatedDoc = {
+        $set: {
+          ...updatedData,
+        },
+      };
+      const result = await productsCollection.updateOne(filter, updatedDoc);
+
+      res.send(result);
+    });
+
+    app.delete("/products/:id", async (req, res) => {
+      const productId = req.params.id;
+
+      const query = { _id: new ObjectId(productId) };
+
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
     });
 
     console.log(
